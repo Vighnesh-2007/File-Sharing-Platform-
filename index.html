@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FileVault Pro - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-page">
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <a class="logo" href="#">
+            <span class="brand-mark small">☁</span>
+            <span>FileVault <b>Pro</b></span>
+        </a>
+
+        <div class="workspace">▦ &nbsp; Personal Workspace</div>
+
+        <p class="side-label">MENU</p>
+
+        <nav class="side-nav">
+            <button class="nav-item active" data-view="dashboard">
+                <span>⌂</span> Dashboard
+            </button>
+
+            <button class="nav-item" data-view="all">
+                <span>▣</span> My Files
+            </button>
+
+            <button class="nav-item" data-view="shared">
+                <span>♧</span> Shared Files
+            </button>
+
+            <button class="nav-item" data-view="recent">
+                <span>◷</span> Recent Files
+            </button>
+
+            <button class="nav-item" data-view="starred">
+                <span>☆</span> Starred
+            </button>
+
+            <button class="nav-item" data-view="trash">
+                <span>♜</span> Trash
+            </button>
+        </nav>
+
+        <p class="side-label">PREFERENCES</p>
+
+        <nav class="side-nav">
+            <button class="nav-item" data-view="settings">
+                <span>⚙</span> Settings
+            </button>
+        </nav>
+
+        <div class="storage-card">
+            <div class="storage-title">Storage</div>
+            <div class="storage-track">
+                <i id="storageBar"></i>
+            </div>
+            <p id="storageText">0 B of 100 MB used</p>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">
+            ↪ &nbsp; Log out
+        </button>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <button id="mobileMenu" class="mobile-menu">☰</button>
+
+            <div>
+                <p class="eyebrow">PERSONAL CLOUD</p>
+                <h2 id="pageTitle">Dashboard</h2>
+            </div>
+
+            <div class="top-actions">
+                <input id="searchInput" class="search"
+                       placeholder="Search files...">
+
+                <button id="themeToggle" class="icon-btn">◐</button>
+
+                <button id="notificationBtn" class="icon-btn">♧</button>
+
+                <div class="avatar" id="avatar">U</div>
+            </div>
+
+        </header>
+
+        <!-- HERO -->
+        <section id="dashboardHero" class="hero">
+
+            <div>
+                <p class="eyebrow light">YOUR PERSONAL CLOUD</p>
+
+                <h1>
+                    Everything you need.<br>
+                    <span>All in one place.</span>
+                </h1>
+
+                <p>
+                    Store, organize and securely share all your
+                    important files from one simple workspace.
+                </p>
+
+                <button id="heroUpload" class="white-btn">
+                    ☁ Upload New File
+                </button>
+            </div>
+
+            <div class="hero-art">
+                <div class="cloud-icon">☁<small>↑</small></div>
+                <span class="float-file">PDF</span>
+                <span class="float-file second">▧</span>
+            </div>
+
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="stats-grid">
+
+            <article class="stat-card">
+                <div class="stat-icon purple">▤</div>
+                <span class="stat-tag">All files</span>
+                <strong id="totalFiles">0</strong>
+                <small>Total Files</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon blue">▰</div>
+                <span class="stat-tag">Organized</span>
+                <strong id="totalFolders">0</strong>
+                <small>Total Folders</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon green">♧</div>
+                <span class="stat-tag">Collaboration</span>
+                <strong id="sharedFiles">0</strong>
+                <small>Shared Files</small>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon orange">▤</div>
+                <span class="stat-tag">Capacity</span>
+                <strong id="storageUsed">0 B</strong>
+                <small>Storage Used</small>
+            </article>
+
+        </section>
+
+        <!-- UPLOAD -->
+        <section class="upload-zone" id="dropZone">
+
+            <div class="upload-symbol">☁</div>
+
+            <div>
+                <h3>Drop your files here</h3>
+                <p>Drag and drop files or browse your computer</p>
+                <small>Images, PDFs, documents and more</small>
+            </div>
+
+            <button id="browseBtn" class="primary-btn">
+                Browse Files
+            </button>
+
+            <input id="fileInput" type="file" multiple hidden>
+
+        </section>
+
+        <!-- FOLDERS -->
+        <section class="section-block">
+
+            <div class="section-heading">
+                <div>
+                    <h2>My Folders</h2>
+                    <p>Organize your files into folders</p>
+                </div>
+
+                <button id="newFolderBtn" class="outline-btn">
+                    ＋ New Folder
+                </button>
+            </div>
+
+            <div id="folderList" class="folder-grid"></div>
+
+        </section>
+
+        <!-- FILES -->
+        <section class="section-block">
+
+            <div class="section-heading">
+                <div>
+                    <h2 id="fileHeading">Recent Files</h2>
+                    <p id="fileSubheading">Your latest uploads and documents</p>
+                </div>
+
+                <div class="filters">
+                    <select id="typeFilter">
+                        <option value="all">All types</option>
+                        <option value="image">Images</option>
+                        <option value="pdf">PDFs</option>
+                        <option value="document">Documents</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <select id="sortSelect">
+                        <option value="newest">Newest first</option>
+                        <option value="oldest">Oldest first</option>
+                        <option value="name">Name A-Z</option>
+                        <option value="size">Largest first</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="fileList" class="file-grid"></div>
+
+        </section>
+
+    </main>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="modal" id="previewModal">
+    <div class="modal-card wide">
+        <div class="modal-head">
+            <h2 id="previewTitle">Preview</h2>
+            <button class="close-modal">×</button>
+        </div>
+        <div id="previewContent" class="preview-content"></div>
+    </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal" id="shareModal">
+    <div class="modal-card">
+
+        <div class="modal-head">
+            <h2>Share file</h2>
+            <button class="close-modal">×</button>
+        </div>
+
+        <p class="muted">Create a local demo sharing link for this file.</p>
+
+        <label>Permission</label>
+        <select id="sharePermission">
+            <option value="viewer">Can view</option>
+            <option value="editor">Can edit (demo)</option>
+        </select>
+
+        <label>Link expiry</label>
+        <select id="shareExpiry">
+            <option value="1">1 day</option>
+            <option value="7" selected>7 days</option>
+            <option value="30">30 days</option>
+        </select>
+
+        <button id="generateLinkBtn" class="primary-btn full">
+            Generate link
+        </button>
+
+        <div class="copy-row">
+            <input id="shareLink" readonly
+                   placeholder="Generated link appears here">
+            <button id="copyLinkBtn" class="outline-btn">Copy</button>
+        </div>
+
+        <p class="tiny-note">
+            Demo links do not transfer files to another device or user.
+        </p>
+
+    </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settingsModal">
+    <div class="modal-card">
+
+        <div class="modal-head">
+            <h2>Settings</h2>
+            <button class="close-modal">×</button>
+        </div>
+
+        <label>Display name</label>
+        <input id="profileName" placeholder="Your name">
+
+        <button id="saveSettingsBtn" class="primary-btn full">
+            Save settings
+        </button>
+
+        <p class="tiny-note">
+            Account: <span id="accountEmail"></span>
+        </p>
+
+    </div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="modal" id="notificationModal">
+    <div class="modal-card">
+
+        <div class="modal-head">
+            <h2>Notifications</h2>
+            <button class="close-modal">×</button>
+        </div>
+
+        <div id="notificationList" class="notification-list"></div>
+
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

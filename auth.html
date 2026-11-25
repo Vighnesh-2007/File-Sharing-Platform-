@@ -1,0 +1,131 @@
+const USERS_KEY = "fvUsers";
+const SESSION_KEY = "fvCurrentUser";
+
+// Get users from Local Storage
+function getUsers() {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+}
+
+// Show messages
+function showMessage(id, message, type) {
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.textContent = message;
+        element.className = "form-message " + type;
+    }
+}
+
+// Show password
+document.querySelectorAll(".show-pass").forEach(button => {
+    button.addEventListener("click", function () {
+        const input = document.getElementById(this.dataset.target);
+
+        if (input.type === "password") {
+            input.type = "text";
+            this.textContent = "Hide";
+        } else {
+            input.type = "password";
+            this.textContent = "Show";
+        }
+    });
+});
+
+// SIGNUP
+const signupForm = document.getElementById("signupForm");
+
+if (signupForm) {
+    signupForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("signupName").value.trim();
+        const email = document.getElementById("signupEmail").value.trim().toLowerCase();
+        const password = document.getElementById("signupPassword").value;
+        const confirm = document.getElementById("confirmPassword").value;
+
+        if (!name || !email || !password || !confirm) {
+            return showMessage("signupMessage", "Please fill all fields.", "error");
+        }
+
+        if (password.length < 6) {
+            return showMessage("signupMessage", "Password must contain at least 6 characters.", "error");
+        }
+
+        if (password !== confirm) {
+            return showMessage("signupMessage", "Passwords do not match.", "error");
+        }
+
+        const users = getUsers();
+
+        if (users.some(user => user.email === email)) {
+            return showMessage("signupMessage", "Email already registered. Please sign in.", "error");
+        }
+
+        users.push({
+            id: Date.now().toString(),
+            name,
+            email,
+            password
+        });
+
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+        showMessage("signupMessage", "Registration successful! Please sign in.", "success");
+
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1000);
+    });
+}
+
+// LOGIN
+const loginForm = document.getElementById("loginForm");
+
+if (loginForm) {
+    loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+        const password = document.getElementById("loginPassword").value;
+
+        const users = getUsers();
+
+        if (users.length === 0) {
+            return showMessage(
+                "loginMessage",
+                "No account found. Please create an account first.",
+                "error"
+            );
+        }
+
+        const user = users.find(
+            u => u.email === email && u.password === password
+        );
+
+        if (!user) {
+            return showMessage(
+                "loginMessage",
+                "Invalid email or password. Try again.",
+                "error"
+            );
+        }
+
+        localStorage.setItem(
+            SESSION_KEY,
+            JSON.stringify({
+                name: user.name,
+                email: user.email
+            })
+        );
+
+        showMessage(
+            "loginMessage",
+            "Login successful! Redirecting...",
+            "success"
+        );
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 700);
+    });
+}
